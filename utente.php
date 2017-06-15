@@ -3,22 +3,7 @@
 <?php include "config.php" ?>
 <?php include "functions.php" ?>
 
-<?php
-if(!empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off')){
-
-}else {
-  $redirect = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-  header('HTTP/1.1 301 Moved Permanently');
-  header('Location: '.$redirect);
-  exit();
-}
-my_session_start();
-user_logged_in();
-$user = $_SESSION['user'];
-if(!$user->update_local_values()){
-  echo "error: values not updated";
-}
-?>
+<?php include "protected.php" ?>
 
 <body>
     <?php if(isset($_GET["message"])){
@@ -48,7 +33,7 @@ if(!$user->update_local_values()){
 
     </p>
     <?php
-    if(isset($thr)) echo "Modifica la tua offerta";
+    if(($user->get_THR()) != null) echo "Modifica la tua offerta";
     else echo "Fai un offerta";?>
     <form name="aggiorna_thr_form" method="post" action="action.php">
       <input type="hidden" name="form_name" value="aggiorna_thr_form">

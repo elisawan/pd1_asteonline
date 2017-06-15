@@ -1,10 +1,7 @@
 <?php
 function user_logged_in() {
-    if (isset($_SESSION['user_name'])) {
-        return ($_SESSION['user_name']);
-    } else {
+    if (!isset($_SESSION['user']))
         header("Location: login.php?mgs=accesso negato");
-    }
 }
 
 function my_session_start(){

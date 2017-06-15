@@ -4,68 +4,86 @@
  */
 class User
 {
+  private $thr;
+  private $user_name;
 
-function get_THR(){
+  function login($user_name, $password){
+    $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+    if(!$con){
+      var_dump(mysqli_connect_errno());
+      var_dump(mysqli_connect_error());
+      return false;
+    }
+    var_dump($user_name);
+    var_dump($password);
+    $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$user_name."' AND password='".$password."'";
+    $result = mysqli_query($con, $query);
+    //var_dump($result);
+    if($result === false)
+      return false;
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    var_dump($row);
+    $this->thr = $row['thr'];
+    $this->user_name = $row['user_name'];
+    var_dump($this);
+    mysqli_free_result($result);
+    mysqli_close($con);
+    return true;
+  }
 
-    $thr = NULL;
-    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    if ($con->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+  function get_for_update($con, $from_user){
+    $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+    if(!$con){
+      var_dump(mysqli_connect_errno());
+      var_dump(mysqli_connect_error());
+      return false;
     }
-    $stmt = $con->prepare("SELECT thr FROM utenti WHERE user_name=?");
-    $stmt->bind_param('s', $_SESSION['user_name']);
-    if(!$stmt->execute()){
-        return false;
-    }
-    $stmt->store_result();
-    if($stmt->num_rows == 1){
-        $stmt->bind_result($thr);
-        $stmt->fetch();
-    }
-    $stmt->close();
-    $con->close();
-    return $thr;
+    $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$from_user->get_user_name()."' FOR UPDATE";
+    $result = mysqli_query($con, $query);
+    //var_dump($result);
+    if($result === false)
+      return false;
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $this->thr = $row['thr'];
+    $this->user_name = $row['user_name'];
+    mysqli_free_result($result);
+    return true;
+  }
+
+  function get($user_name){
+    $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$user_name."'";
+    $result = mysqli_query($con, $query);
+    //var_dump($result);
+    if($result === false)
+      return false;
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $this->thr = $row['thr'];
+    $this->user_name = $row['user_name'];
+    mysqli_free_result($result);
+    mysqli_close($con);
+    return true;
+  }
+
+
+
+function get_thr(){
+  if(isset($this->thr))
+    return $this->thr;
+  return "nessuna offerta";
+}
+function set_thr($thr){
+  $this->thr = $thr;
+  return;
 }
 
-function is_winner(){
-
-    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    if ($con->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    $stmt = $con->prepare("SELECT is_winner FROM utenti WHERE user_name=?");
-    $stmt->bind_param('s', $_SESSION['user_name']);
-    if(!$stmt->execute()){
-        return false;
-    }
-    $stmt->store_result();
-    if($stmt->num_rows == 1){
-        $stmt->bind_result($is_winner);
-        $stmt->fetch();
-    }
-    $stmt->close();
-    $con->close();
-    return $is_winner;
+function get_user_name(){
+  if(isset($this->user_name))
+    return $this->user_name;
+  return null;
 }
 
-function get_user($user_name, $password){
-    $user = null;
-    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    $stmt = $con->prepare("SELECT user_name, thr, is_winner FROM utenti WHERE user_name=? AND password=?");
-    $stmt->bind_param('ss', $user_name, $password);
-    $stmt->execute();
-    $stmt->store_result();
-    if($stmt->num_rows == 1){
-        $stmt->bind_result($user_name,$thr,$is_winner);
-        $stmt->fetch();
-        $user=array("user_name"=>$user_name,"thr"=>$thr,"is_winner"=>$is_winner);
-    }
-    $stmt->close();
-    $con->close();
 
-    return $user;
 
-}
 
 function add_user($user_name, $password){
     $user_name=mysql_real_escape_string($user_name);
@@ -86,27 +104,35 @@ function add_user($user_name, $password){
     return $ret;
 }
 
-function update_thr($thr){
-    if(func_num_args() != 1){
-        return FALSE;
-    }
-    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    if (mysqli_connect_errno()) {
-        printf("Connect failed: %s\n", mysqli_connect_error());
-        return FALSE;
-    }
-    $stmt = $con->prepare("UPDATE utenti SET thr = ? WHERE user_name = ?");
-    $stmt->bind_param('ds', $thr, $_SESSION['user_name']);
-    if(!$stmt->execute()){
-        $ret = false;
-    }else{
-        $ret = true;
-    }
-    $stmt->close();
-    $con->close();
-    return $ret;
+function update_thr($con, $thr){
+  var_dump($thr);
+  echo "---------";
+  var_dump($this->get_user_name());
+  $query = "UPDATE utenti SET thr = '".$thr."' WHERE user_name = '".$this->get_user_name()."'";
+  $result = mysqli_query($con, $query);
+  return $result;
 }
 
+function update_local_values(){
+  $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+  if(!$con){
+    var_dump(mysqli_connect_errno());
+    var_dump(mysqli_connect_error());
+    return false;
+  }
+  $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$this->user_name."'";
+  $result = mysqli_query($con, $query);
+  if(!$result)
+    return false;
+  $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+  if(!$row)
+    return false;
+  $this->user_name = $row['user_name'];
+  $this->thr = $row['thr'];
+  mysqli_free_result($result);
+  mysqli_close($con);
+  return true;
+}
 
 
 

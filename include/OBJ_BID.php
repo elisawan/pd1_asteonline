@@ -5,18 +5,47 @@
  */
 class BID
 {
-    function get_BID(){
-        $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+  private $value;
+  private $user;
 
-        $stmt = $con->prepare("SELECT valore FROM BID WHERE num_asta = 1");
-        $stmt->execute();
-        $stmt->bind_result($bid);
-        while ($stmt->fetch()){
-            $res=$bid;
-        }
-        mysqli_close($con);
-        return $res;
-    }
+
+
+  function get(){
+      $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+      if(!$con){
+        var_dump(mysqli_connect_errno());
+        var_dump(mysqli_connect_error());
+        return false;
+      }
+      $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1");
+      $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+      $this->value = $row['valore'];
+      $this->user = $row['user_name'];
+      mysqli_free_result($result);
+      mysqli_close($con);
+      return true;
+  }
+
+  function get_for_update($con){
+      $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1 FOR UPDATE");
+      $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+      $this->value = $row['valore'];
+      $this->user = $row['user_name'];
+      mysqli_free_result($result);
+      return true;
+  }
+
+  function get_BID(){
+      if(isset($this->value))
+        return $this->value;
+      return null;
+  }
+
+  function get_user(){
+      if(isset($this->user))
+        return $this->user;
+      return null;
+  }
 
     function get_winner(){
         $winner;
@@ -35,40 +64,30 @@ class BID
         return $winner;
     }
 
-    function update_BID(){
-        $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-        $stmt = $con->prepare("SELECT thr, user_name FROM utenti ORDER BY thr DESC LIMIT 2");
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($thr, $user_name);
+    function update_bid($con){
+        $query_first_two = "SELECT thr, user_name FROM utenti ORDER BY thr DESC LIMIT 2 FOR UPDATE";
+        $result = mysqli_query($con, $query_first_two);
+        if(!$result)
+          return false;
         //get max thr and set the user to winner
-        $stmt->fetch();
-        $winner = $user_name;
-        $stmt = $con->prepare("UPDATE utenti SET is_winner = ? WHERE user_name = ?");
-        echo "----------";
-        echo $winner;
-        $is_winner = true;
-        $stmt->bind_param('is', $is_winner, $winner);
-        if(!$stmt->execute()){
-            $ret = false;
-        }else{
-            $ret = true;
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $winner_user_name = $row['user_name'];
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        echo "row";
+        var_dump($row);
+        if(($row) && ($row['thr'] != null)){
+          $new_bid = $row['thr'] + 0.01;
+        } else {
+          $new_bid = 1.01;
         }
-        //change bid value
-        $stmt->fetch();
-        $new_bid = $thr + 0.01; //thr = second
-        $stmt->close();
+        var_dump($new_bid);
+        mysqli_free_result($result);
 
-        $stmt = $con->prepare("UPDATE bid SET valore = ?, user_name = ? WHERE  num_asta = 1");
-        $stmt->bind_param('ds', $new_bid, $winner);
-        if(!$stmt->execute()){
-            $ret = false;
-        }else{
-            $ret = true;
-        }
-        $stmt->close();
-        $con->close();
-        return $ret;
+        $query_update_bid = "UPDATE bid SET valore = '".$new_bid."', user_name = '".$winner_user_name."' WHERE  num_asta = 1";
+        $result = mysqli_query($con, $query_update_bid);
+        if(!$result)
+          return false;
+        return true;
 
     }
 

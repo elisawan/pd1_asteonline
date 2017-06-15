@@ -1,7 +1,6 @@
 <?php include "head.html" ?>
 <?php include "header.html" ?>
-<?php include "action.php" ?>
-
+<?php include "config.php" ?>
 
 <body>
     <?php if(isset($_GET["message"])){
@@ -9,26 +8,16 @@
     }
     ?>
 
+    <?php
+    $bid = new BID();
+    if(!$bid->get()){
+        echo "errore";
+    }
+    ?>
 
-    <p>BID corrente:
-        <?php
-        $bid = $default_BID->get_BID();
-        if(isset($bid)){
-            echo $bid;
-        } else {
-            echo "errore";
-        }
-        ?>
+    <p>BID corrente: <?php  echo $bid->get_BID();?>
 
-    <p>effettuata da:
-        <?php
-        $winner = $default_BID->get_winner();
-        if(isset($winner)){
-            echo $winner;
-        } else {
-            echo "nessuno";
-        }
-        ?>
+    <p>effettuata da: <?php  echo $bid->get_user();?>
     </p>
 
 

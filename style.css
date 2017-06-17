@@ -1,0 +1,52 @@
+html{
+  width: 100%;
+  height: 100%;
+}
+header{
+  width: inherit;
+  height: 15%;
+  text-align: center;
+  background-color: #00bfa5;
+}
+.main{
+  height: 75%;
+}
+.menu{
+  width: 15%;
+  float: left;
+  background-color: #004d40;
+  height: 100%;
+}
+.menuitem{
+  height: auto;
+  background-color: inherit;
+  border: 0px;
+  cursor: pointer;
+  position: relative;
+  width: auto;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+body{
+  width: 100%;
+  float: center;
+  height: 100%;
+}
+.content{
+  width: 85%;
+  text-align: center;
+  float: right;
+}
+.footer{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
+a{
+  font-size: larger;
+  color: white;
+}

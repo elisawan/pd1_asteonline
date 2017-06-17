@@ -19,7 +19,7 @@ class User
     $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$user_name."' AND password='".$password."'";
     $result = mysqli_query($con, $query);
     //var_dump($result);
-    if($result === false)
+    if ($result->num_rows != 1)
       return false;
     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
     var_dump($row);
@@ -30,6 +30,7 @@ class User
     mysqli_close($con);
     return true;
   }
+
 
   function get_for_update($con, $from_user){
     $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);

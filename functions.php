@@ -1,7 +1,8 @@
 <?php
 function user_logged_in() {
-    if (!isset($_SESSION['user']))
-        header("Location: login.php?mgs=accesso negato");
+  var_dump($_SESSION['user']);
+    //if (!isset($_SESSION['user']))
+        //header("Location: login.php?mgs=accesso negato");
 }
 
 function my_session_start(){
@@ -35,7 +36,7 @@ function my_session_start(){
         exit; // IMPORTANT to avoid further output from the script
     } else {
         $_SESSION['time']=time(); /* update time */
-        echo '<html><body>Updated last access time: '.$_SESSION['time'].'</body></html>';
+        //echo '<html><body>Updated last access time: '.$_SESSION['time'].'</body></html>';
     }
 }
 

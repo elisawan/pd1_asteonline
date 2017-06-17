@@ -3,7 +3,6 @@
 <?php
 my_session_start();
 user_logged_in();
-$user = $_SESSION['user'];
 
 
 /*
@@ -44,6 +43,10 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='registration_form'){
     if (!filter_var($_POST['user_name'], FILTER_VALIDATE_EMAIL)) {
         header("location: ./registrazione.php?message=email non valida"); //back to the login page
         exit();
+    }
+    if(!(preg_match("/[a-z]/i", $_POST['password']) && preg_match("/\\d/", $_POST['password']))){
+      header("location: ./registrazione.php?message=pass non valida"); //back to the login page
+      exit();
     }
     if($default_user->add_user($_POST['user_name'], md5($_POST['password']))){
         $current_user = $default_user->get_user($_POST['user_name'], $_POST['password']);

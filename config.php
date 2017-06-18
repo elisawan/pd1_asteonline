@@ -6,7 +6,6 @@
 
   require_once('./include/OBJ_user.php');
   require_once('./include/OBJ_BID.php');
+
   
-  $default_user = new User();
-  $default_BID = new BID();
 ?>

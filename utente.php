@@ -2,7 +2,9 @@
 <?php include "header_utente.html" ?>
 <?php include "config.php" ?>
 <?php include "functions.php" ?>
+
 <?php include "protected.php" ?>
+
 <?php
 $bid = new BID();
 if(!$bid->get()){

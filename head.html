@@ -6,4 +6,10 @@
   <meta name="description" content="Gestione di aste online">
   <meta name="author" content="Elisa Wan">
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript">
+    document.cookie="test_cookie=enabled";
+    if(!navigator.cookieEnabled){
+      window.location.replace("/pd1_asteonline/error_page.php");
+    }
+  </script>
 </head>

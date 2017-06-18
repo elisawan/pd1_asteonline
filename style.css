@@ -52,13 +52,11 @@ a{
   color: white;
 }
 
-#msg_errore{
-  visibility: hidden;
+.msg_errore{
   display: inline-block;
   margin: 20px;
   color: red;
   font-size: large;
-  border: solid;
   padding: 5px;
 }
 #msg{

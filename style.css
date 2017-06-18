@@ -1,21 +1,28 @@
-html{
-  width: 100%;
-  height: 100%;
+body{
+  margin: 20px;
 }
-header{
-  width: inherit;
-  height: 15%;
-  text-align: center;
+.wrapper{
+
+}
+.top{
+  padding: 15px;
   background-color: #00bfa5;
 }
-.main{
-  height: 75%;
+.title{
+  text-align: center;
 }
-.menu{
-  width: 15%;
+.middle{
+  overflow: auto;
+  position: relative;
+}
+.sidebar{
   float: left;
+  width: 200px;
+  top: 0;
+  bottom: 0;
+  position: absolute;
   background-color: #004d40;
-  height: 100%;
+  padding: 10px;
 }
 .menuitem{
   height: auto;
@@ -27,26 +34,39 @@ header{
   margin-right: 5px;
   margin-left: 5px;
 }
-body{
-  width: 100%;
-  float: center;
-  height: 100%;
+.main{
+  padding: 30px;
+  margin-left: 250px;
 }
-.content{
-  width: 85%;
-  text-align: center;
-  float: right;
-}
-.footer{
-  position: absolute;
+
+.bottom{
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 1rem;
+  padding: 10px;
   background-color: #efefef;
   text-align: center;
 }
 a{
   font-size: larger;
   color: white;
+}
+
+#msg_errore{
+  visibility: hidden;
+  display: inline-block;
+  margin: 20px;
+  color: red;
+  font-size: large;
+  border: solid;
+  padding: 5px;
+}
+#msg{
+  visibility: hidden;
+  display: inline-block;
+  margin: 20px;
+  color: black;
+  font-size: large;
+  border: solid;
+  padding: 5px;
 }

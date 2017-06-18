@@ -1,29 +1,27 @@
 <?php require "config.php" ?>
 <?php include "functions.php" ?>
 <?php
-my_session_start();
-user_logged_in();
-
-
 /*
  * login
 */
 if(isset($_POST['form_name']) && $_POST['form_name']=='login_form'){
     if(!isset($_POST['user_name'])){
-      header("location: ./login.php?message=user_name non inserito"); //back to the login page
+      header("location: ./login.php?msg_errore=user_name non inserito"); //back to the login page
       exit();
     }
     if(!isset($_POST['password'])){
-        header("location: ./login.php?message=password non inserito"); //back to the login page
+        header("location: ./login.php?msg_errore=password non inserito"); //back to the login page
         exit();
     }
-    $user_name = $_POST['user_name'];
+    $user_name = strip_tags($_POST['user_name']);
     $password = md5($_POST['password']);
     $user = new User();
     if(!$user->login($user_name, $password)){ //login failed
-      header("location: ./login.php?message=username e/o password errati"); //back to the login page
+      header("location: ./login.php?msg_errore=username e/o password errati"); //back to the login page
       exit();
     }
+    my_session_start();
+    $_SESSION['time']=time();
     $_SESSION['user']=$user;
     //var_dump($_SESSION['user']);
     header("location: ./utente.php");
@@ -34,45 +32,41 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='login_form'){
 /*
  * Registration
 */
-
 if(isset($_POST['form_name']) && $_POST['form_name']=='registration_form'){
     if($_POST['re-password'] != $_POST['password']){
-        header("location: ./registrazione.php?message=le password non combaciano"); //back to the login page
+        header("location: ./registrazione.php?msg_errore=le password non combaciano"); //back to the login page
         exit();
     }
     if (!filter_var($_POST['user_name'], FILTER_VALIDATE_EMAIL)) {
-        header("location: ./registrazione.php?message=email non valida"); //back to the login page
+        header("location: ./registrazione.php?msg_errore=email non valida"); //back to the login page
         exit();
     }
     if(!(preg_match("/[a-z]/i", $_POST['password']) && preg_match("/\\d/", $_POST['password']))){
-      header("location: ./registrazione.php?message=pass non valida"); //back to the login page
+      header("location: ./registrazione.php?msg_errore=pass non valida"); //back to the login page
       exit();
     }
-    if($default_user->add_user($_POST['user_name'], md5($_POST['password']))){
-        $current_user = $default_user->get_user($_POST['user_name'], $_POST['password']);
+    $user = new User();
+    if($user->add_user($_POST['user_name'], md5($_POST['password']))){
+      header("location: ./index.php?msg=registrazione effettuata con successo");
+      exit();
     }
-    if(isset($current_user)){ //login succeded
-        $_SESSION['user_name']=$_POST['user_name'];
-        header("location: ./utente.php");
-        exit();
-    }else{ //login failed
-        header("location: ./login.php?message=registrazione non riuscita"); //back to the login page
-        exit();
-    }
+    header("location: ./login.php?msg_errore=registrazione non riuscita"); //back to the login page
+    exit();
 }
 
 /*
  * Aggiorna thr
 */
-
 if(isset($_POST['form_name']) && $_POST['form_name']=='aggiorna_thr_form'){
+    my_session_start();
+    user_logged_in();
     if(!isset($_POST['nuovo_thr'])){
-      header("location: ./utente.php?message=valore thr non inserito");
+      header("location: ./utente.php?msg_errore=valore thr non inserito");
       exit();
     }
     $nuovo_thr = strip_tags($_POST['nuovo_thr']);
     if(!($nuovo_thr_val = doubleval($nuovo_thr))){
-      header("location: ./utente.php?message=valore thr non valido");
+      header("location: ./utente.php?msg_errore=valore thr non valido");
       exit();
     }
     //------$nuovo_thr_val is safe to use------
@@ -92,7 +86,7 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='aggiorna_thr_form'){
       var_dump($bid_update);
       //-----------get user for update with lock , in case the user is using more than one browser at the same tidy_get_html_ver
       $user_update = new User();
-      if(!$user_update->get_for_update($con, $user))
+      if(!$user_update->get_for_update($con, $_SESSION['user']))
         throw new Exception("user->get_for_update() fallito");
       var_dump($user_update);
       if($nuovo_thr_val <= $bid_val)
@@ -109,12 +103,12 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='aggiorna_thr_form'){
       echo $e->getMessage();
       mysqli_commit($con);
       mysqli_close($con);
-      header("location: ./utente.php?message=update thr fallito:".$e->getMessage());
+      header("location: ./utente.php?msg_errore=update thr fallito:".$e->getMessage());
       exit();
     }
     mysqli_commit($con);
     mysqli_close($con);
-    header("location: ./utente.php?message=update eseguito con successo");
+    header("location: ./utente.php?msg=update eseguito con successo");
     exit();
 }
 

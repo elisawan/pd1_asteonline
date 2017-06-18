@@ -65,82 +65,64 @@ class User
     return true;
   }
 
-
-
-function get_thr(){
-  if(isset($this->thr))
-    return $this->thr;
-  return "nessuna offerta";
-}
-function set_thr($thr){
-  $this->thr = $thr;
-  return;
-}
-
-function get_user_name(){
-  if(isset($this->user_name))
-    return $this->user_name;
-  return null;
-}
-
-
-
-
-function add_user($user_name, $password){
-    $user_name=mysql_real_escape_string($user_name);
-    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-    if (mysqli_connect_errno()) {
-        printf("Connect failed: %s\n", mysqli_connect_error());
-        exit();
-    }
-    $stmt = $con->prepare("INSERT INTO utenti (user_name,password) VALUES (?,?)");
-    $stmt->bind_param('ss', $user_name, $password);
-    if(!$stmt->execute()){
-        $ret = false;
-    }else{
-        $ret = true;
-    }
-    $stmt->close();
-    $con->close();
-    return $ret;
-}
-
-function update_thr($con, $thr){
-  var_dump($thr);
-  echo "---------";
-  var_dump($this->get_user_name());
-  $query = "UPDATE utenti SET thr = '".$thr."' WHERE user_name = '".$this->get_user_name()."'";
-  $result = mysqli_query($con, $query);
-  return $result;
-}
-
-function update_local_values(){
-  $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-  if(!$con){
-    var_dump(mysqli_connect_errno());
-    var_dump(mysqli_connect_error());
-    return false;
+  function get_thr(){
+    if(isset($this->thr))
+      return $this->thr;
+    return "nessuna offerta";
   }
-  $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$this->user_name."'";
-  $result = mysqli_query($con, $query);
-  if(!$result)
-    return false;
-  $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-  if(!$row)
-    return false;
-  $this->user_name = $row['user_name'];
-  $this->thr = $row['thr'];
-  mysqli_free_result($result);
-  mysqli_close($con);
-  return true;
+
+  function set_thr($thr){
+    $this->thr = $thr;
+    return;
+  }
+
+  function get_user_name(){
+    if(isset($this->user_name))
+      return $this->user_name;
+    return null;
+  }
+
+  function add_user($user_name, $password){
+      $user_name=mysql_real_escape_string($user_name);
+      $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+      if(!$con){
+        var_dump(mysqli_connect_errno());
+        var_dump(mysqli_connect_error());
+        return false;
+      }
+      $result = mysqli_query($con, "INSERT INTO utenti (user_name,password) VALUES ('".$user_name."','".$password."')");
+      mysqli_close($con);
+      return $result;
+  }
+
+  function update_thr($con, $thr){
+    var_dump($thr);
+    echo "---------";
+    var_dump($this->get_user_name());
+    $query = "UPDATE utenti SET thr = '".$thr."' WHERE user_name = '".$this->get_user_name()."'";
+    $result = mysqli_query($con, $query);
+    return $result;
+  }
+
+  function update_local_values(){
+    $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+    if(!$con){
+      var_dump(mysqli_connect_errno());
+      var_dump(mysqli_connect_error());
+      return false;
+    }
+    $query = "SELECT user_name, thr FROM utenti WHERE user_name='".$this->user_name."'";
+    $result = mysqli_query($con, $query);
+    if(!$result)
+      return false;
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    if(!$row)
+      return false;
+    $this->user_name = $row['user_name'];
+    $this->thr = $row['thr'];
+    mysqli_free_result($result);
+    mysqli_close($con);
+    return true;
+  }
 }
-
-
-
-}
-
-
-
-
-
 ?>

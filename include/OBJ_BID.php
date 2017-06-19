@@ -10,6 +10,7 @@ class BID
 
   function get(){
       $con = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+      var_dump($con);
       if(!$con)
         return false;
       $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1");

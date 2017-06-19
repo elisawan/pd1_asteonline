@@ -68,7 +68,7 @@ class User
   function get_thr(){
     if(isset($this->thr))
       return $this->thr;
-    return "nessuna offerta";
+    return "";
   }
 
   function set_thr($thr){

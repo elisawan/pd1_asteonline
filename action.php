@@ -45,10 +45,20 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='registration_form'){
       header("location: ./registrazione.php?msg_errore=pass non valida"); //back to the login page
       exit();
     }
+    $user_name = strip_tags($_POST['user_name']);
+    $password = md5($_POST['password']);
     $user = new User();
-    if($user->add_user($_POST['user_name'], md5($_POST['password']))){
-      header("location: ./index.php?msg=registrazione effettuata con successo");
-      exit();
+    if($user->add_user($user_name, $password)){
+        if(!$user->login($user_name, $password)){ //login failed
+          header("location: ./login.php?msg_errore=login fallito"); //back to the login page
+          exit();
+        }
+        my_session_start();
+        $_SESSION['time']=time();
+        $_SESSION['user']=$user;
+        //var_dump($_SESSION['user']);
+        header("location: ./utente.php");
+        exit();
     }
     header("location: ./login.php?msg_errore=registrazione non riuscita"); //back to the login page
     exit();

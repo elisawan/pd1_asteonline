@@ -13,6 +13,8 @@ class BID
       if(!$con)
         return false;
       $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1");
+      if(mysqli_num_rows($result) != 1)
+        return false;
       $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
       $this->value = $row['valore'];
       $this->user = $row['user_name'];

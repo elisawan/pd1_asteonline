@@ -1,6 +1,9 @@
+<?php include "config.php" ?>
+<?php include "functions.php" ?>
+<?php include "protected.php" ?>
+
 <?php
-include 'functions.php';
-include 'protected.php';
+
 
 /*
  * Aggiorna thr

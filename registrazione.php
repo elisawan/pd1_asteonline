@@ -34,13 +34,13 @@
 
 
 <div class="main">
-  <div id="msg_errore"><?php error_message(); ?></div>
-  <div id="msg"><?php message(); ?></div>
+  <div class="msg_errore"><?php error_message(); ?></div>
+  <div class="msg"><?php message(); ?></div>
   <form name="registration_form" method="post" action="action.php" onsubmit="return validateForm();">
-    <input type="hidden" name="form_name" value="registration_form">
-    Username (e-mail): <input name="user_name" type="text"><br/><br>
-    Password: <input name="password" type="password"><br/><br>
-    Re-type password: <input name="re-password" type="password"><br/><br>
+    <input type="hidden" name="form_name" value="registration_form" >
+    Username (e-mail): <input name="user_name" type="text" placeholder="Indirizzo e-mail valido che verra' usato anche come username"><br/><br>
+    Password: <input name="password" type="password" placeholder="Password che contiene almeno un numero e un carattere alfabetico"><br/><br>
+    Re-type password: <input name="re-password" type="password" placeholder="Inserisci di nuovo la password"><br/><br>
     <input type="submit" value="Register"><br/>
   </form>
 </div>

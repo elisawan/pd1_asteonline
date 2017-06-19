@@ -59,7 +59,8 @@ a{
   font-size: large;
   padding: 5px;
 }
-#msg{
+
+.msg{
   visibility: hidden;
   display: inline-block;
   margin: 20px;
@@ -67,4 +68,8 @@ a{
   font-size: large;
   border: solid;
   padding: 5px;
+}
+input{
+    width: 100%;
+    padding: 3px;
 }

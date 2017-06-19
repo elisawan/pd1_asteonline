@@ -5,12 +5,13 @@
 
 
 <div class="main">
-  <div id="msg_errore"><?php error_message(); ?></div>
-  <div id="msg"><?php message(); ?></div>
+  <div class="msg_errore"><?php error_message(); ?></div>
+  <div class="msg"><?php message(); ?></div>
   <?php
   $bid = new BID();
   if(!$bid->get()){
-      echo "<div id='msg_errore'>errore: bid non trovato</div>";
+      header("Location: ./error_page.php");
+      exit;
   }
   ?>
   <p>BID corrente: <?php  echo $bid->get_BID();?><br>

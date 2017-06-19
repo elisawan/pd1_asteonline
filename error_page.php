@@ -5,7 +5,12 @@
     <title></title>
   </head>
   <body>
-    <h1>Errore</h1>
-    <p>il sito non può essere visualizzato perchè i cookie non sono abilitati</p>
+    <h1>Errore...</h1>
+    <h4>Possibili cause</h4>
+    <ul>
+        <li>Cookies non abilitati</li>
+        <li>Connessione al database fallito</li>
+        <li>Stato database non consistente</li>
+    </ul>
   </body>
 </html>

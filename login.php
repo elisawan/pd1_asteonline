@@ -21,12 +21,12 @@
     }
 </script>
 <div class="main">
-  <div id="msg_errore"><?php error_message(); ?></div>
-  <div id="msg"><?php message(); ?></div>
+  <div class="msg_errore"><?php error_message(); ?></div>
+  <div class="msg"><?php message(); ?></div>
   <form onsubmit="return validateForm()" name="login_form" method="post" action="action.php" >
     <input type="hidden" name="form_name" value="login_form">
-    Username (e-mail): <input name="user_name" type="text"><br/><br>
-    Password: <input name="password" type="password"><br/><br>
+    Username (e-mail): <input name="user_name" type="text" placeholder="Indirizzo e-mail utilizzato durante la registrazione"><br/><br>
+    Password: <input name="password" type="password" placeholder="Password scelto durante la registrazione"><br/><br>
     <input type="submit" value="Login"><br/>
   </form>
 </div>

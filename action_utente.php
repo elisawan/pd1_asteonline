@@ -33,18 +33,18 @@ if(isset($_POST['form_name']) && $_POST['form_name']=='aggiorna_thr_form'){
       if(!$bid_update->get_for_update($con))
         throw new Exception("bid->get_for_update() fallito");
       $bid_val = doubleval($bid_update->get_BID());
-      var_dump($bid_update);
+      //var_dump($bid_update);
       //-----------get user for update with lock , in case the user is using more than one browser at the same tidy_get_html_ver
       $user_update = new User();
       if(!$user_update->get_for_update($con, $_SESSION['user']))
         throw new Exception("user->get_for_update() fallito");
-      var_dump($user_update);
+      //var_dump($user_update);
       if($nuovo_thr_val <= $bid_val)
         throw new Exception("valore thr troppo basso, deve essere maggiore del bid corrente");
       if(!$user_update->update_thr($con, $nuovo_thr_val))
         throw new Exception("user->update_thr() fallito");
-      echo "nuovo thr";
-      var_dump($nuovo_thr_val);
+      //echo "nuovo thr";
+      //var_dump($nuovo_thr_val);
       if(!$bid_update->update_bid($con))
         throw new Exception("bid->update() fallito");
     }

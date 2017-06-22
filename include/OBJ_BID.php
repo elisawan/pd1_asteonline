@@ -28,7 +28,7 @@ class BID
       //var_dump($con);
       if(!$con)
         return false;
-      $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1");
+      $result = mysqli_query($con, "SELECT valore, user_name FROM bid WHERE num_asta = 1");
       if((!$result) || (mysqli_num_rows($result) != 1))
         return false;
       $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -46,7 +46,7 @@ class BID
 
 /*get from DB with lock before update*/
   function get_for_update($con){
-      $result = mysqli_query($con, "SELECT valore, user_name FROM BID WHERE num_asta = 1 FOR UPDATE");
+      $result = mysqli_query($con, "SELECT valore, user_name FROM bid WHERE num_asta = 1 FOR UPDATE");
       if((!$result) || (mysqli_num_rows($result) != 1))
         return false;
       $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -76,7 +76,7 @@ class BID
         $thr_second = $row['thr'];
         if($thr_max === $thr_second){
           $new_bid = $thr_max;
-          $winner_user_name = $this->user;  
+          $winner_user_name = $this->user;
         }
         else
           $new_bid = $thr_second + 0.01;
